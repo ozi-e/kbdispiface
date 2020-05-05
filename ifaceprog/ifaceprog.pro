@@ -21,7 +21,7 @@ SOURCES += \
 
 HEADERS += \
     mainwindow.h
-
+    zhelpers.hpp
 FORMS += \
     mainwindow.ui
 
