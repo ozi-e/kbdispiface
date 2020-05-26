@@ -1,4 +1,27 @@
-//  Pubsub envelope publisher
+#include "zmq.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+int main(int argc, char **argv) {
+  void *context = zmq_init(1);
+  void *socket = zmq_socket(context, ZMQ_PUB);
+  zmq_connect(socket, "tcp://benternet.pxl-ea-ict.be:24041");
+  sleep(1);
+  char message[1000] = "testing\n";
+  while(1) {
+    zmq_msg_t out_msg;
+    zmq_msg_init_size(&out_msg, strlen(message));
+    memcpy(zmq_msg_data(&out_msg), message, strlen(message));
+    zmq_send(socket, &out_msg, 1000, 0);
+    zmq_msg_close(&out_msg);
+    sleep(1);
+  }
+}
+
+
+/*//  Pubsub envelope publisher
 //  Note that the zhelpers.h file also provides s_sendmore
 
 #include "zhelpers.h"
@@ -14,11 +37,11 @@ int main (void)
     zmq_connect(pusher, "tcp://benternet.pxl-ea-ict.be:24041");
     zmq_connect(sub, "tcp://benternet.pxl-ea-ict.be:24042");
 
-    char pushtask[] = "example>task?>Ozi>";
-    //char pushanswer[]= "example>answer?>Ozi>";
-    char pushanswer_h[]= "example>answer?>Ozi>\"CORONA-FREE-CHANNEL>f89531b36e7bdf954975a88c498abbd5622224d4>*HATSJU*>\"";
-    char subtask[] = "example>task!>Ozi>";
-    char subanswer[]= "example>answer!>Ozi>";
+    char pushtask[] = "CONSOLE>task?>a>";
+    //char pushanswer[]= "CONSOLE>answer?>a>";
+    char pushanswer_h[]= "CONSOLE>answer?>a>\"test>\"";
+    char subtask[] = "CONSOLE>task?>a>";
+    char subanswer[]= "CONSOLE>answer?>a>";
     zmq_setsockopt(sub, ZMQ_SUBSCRIBE, subtask, strlen(subtask));
 
     printf("Sending [%u]...\r\n", 1);
@@ -50,3 +73,4 @@ int main (void)
     return 0;
 }
 //
+*/
