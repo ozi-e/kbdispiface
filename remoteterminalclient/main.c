@@ -46,9 +46,10 @@ int main()
             {
                 state = 1;
             }
-            if (strncmp(bf, "INTERFACE!>Ozi>", strlen(subTopic)) == 0)
+            else if (strncmp(bf, "INTERFACE!>Ozi>", strlen(subTopic)) == 0)
             {
-                printf("%s\r\n", bf);
+                memmove(bf, bf + strlen(subTopic), strlen(bf));
+                printf("%s", bf);
             }
         }
         else if (state == 1)

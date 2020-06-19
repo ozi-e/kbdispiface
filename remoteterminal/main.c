@@ -18,13 +18,11 @@ int main (void)
     char subanswer[]= "INTERFACE!>Ozi>";   //Channel to get from
     zmq_setsockopt(sub, ZMQ_SUBSCRIBE, subtask, strlen(subtask));
 
-    char cmdpath[] = "C:/WINDOWS/system32/cmd.exe";
-    char temppath[1035];
+    char cmdpath[] = "C:/WINDOWS/system32/cmd.exe"; //unnecessary as system() works wonders
     //char path[] = "E:/eJ3/NP/kbdispiface/build-remoteterminal-Desktop_Qt_5_14_1_MinGW_64_bit-Debug/fop.txt";
 
     FILE *fp;
 
-    char buffer[256] = "";
 
     printf("Sending command\r\n");
     //strncpy(buffer, pushanswer_h, 128);
@@ -34,7 +32,6 @@ int main (void)
     while(1)
     {
         char *buffer;
-        char temppath[255];
         printf("Receiving command\r\n");
         //zmq_recv(sub, buffer, 255, 0);
         buffer = s_recv(sub);
@@ -46,7 +43,6 @@ int main (void)
         //if (strstr(buffer, ".exe") != NULL)
         if (buffer > 0)
         {
-            char *pathtoexe;
             //Removed delimiters and removed first char
             //printf("Executed1\r\n");
             //memcpy(pathtoexe, rcvstr, strlen(rcvstr));
@@ -60,7 +56,6 @@ int main (void)
                 printf("Failed to run command\n" );
                 //exit(1);
               }
-              char *tempb;
             // Read the output a line at a time - output it.
             //s_send(pusher, fgets(path, sizeof(path), fp));
             char path[1035];
