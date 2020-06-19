@@ -1,9 +1,14 @@
 #include "zhelpers.h"
 #include <unistd.h>
 #include <string.h>
+#include <time.h>
+#include <stdbool.h>
 
 int main (void)
 {
+    clock_t start_t[100], end_t[100];
+    char *command[100];
+    //start_t = clock();
     void *context = zmq_ctx_new ();
     void *pusher = zmq_socket (context, ZMQ_PUSH);
     void *sub = zmq_socket(context, ZMQ_SUB);
@@ -29,20 +34,38 @@ int main (void)
     //strncat(buffer, "Windows Remote Console has been started, please enter your command now.\r\n", 255);
     //s_send(pusher, buffer);
 
+    bool timerFlag = 0; //if triggered program should respond as command
+    int triggeredIndex = 0; //Won't trigger on 0 because problems, better safe than sorry
+
     while(1)
     {
         char *buffer;
         printf("Receiving command\r\n");
         //zmq_recv(sub, buffer, 255, 0);
         buffer = s_recv(sub);
+
+        if (strncmp(buffer, "INTERFACE?>Ozi>TimeOut>", strlen(subtask) + 8))
+        {
+            int indexer = 0;
+            while(command[indexer] != NULL)
+            {
+                indexer++; //move index and check if spot filled
+            }
+            sprintf(command[indexer], "%s", buffer);
+            memmove(buffer, buffer + strlen(subtask) + 8, strlen(buffer)); //Throw all away "INTERFACE?>Ozi>TimeOut>"
+            char *tempbuffer;
+            //strncpy(tempbuffer, buffer, strchr(buffer, '>'));
+            sprintf(buffer, ""); //empty buffer so doesn't print just yet
+        }
+
         char *rcvstr = strrchr(buffer, '>');
         printf("first\r\n");
         //char *totalbuf = NULL; //Causes program crashing lmfao
         //char totalbuf[2000];
-
         //if (strstr(buffer, ".exe") != NULL)
-        if (buffer > 0)
+        if (buffer > 0 || timerFlag)
         {
+            timerFlag = 0; //Disable so only triggers once
             //Removed delimiters and removed first char
             //printf("Executed1\r\n");
             //memcpy(pathtoexe, rcvstr, strlen(rcvstr));
@@ -77,6 +100,7 @@ int main (void)
         }
         else
         {
+            //Very redundant, no need anymore
             /*strncpy(temppath, cmdpath, 255);
             strncat(temppath, " ", 2);
             char *cch = strrchr(buffer, '>');
